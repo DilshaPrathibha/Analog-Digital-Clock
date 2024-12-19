@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+<title>clock</title>
 <canvas id="canvas" width="400" height="400">
 Sorry, your browser does not support canvas.
 </canvas>
@@ -15,30 +15,45 @@ radius = radius * 0.90;
 setInterval(drawClock, 1000);
 
 function drawClock() {
-  ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height); 
+  ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+  drawRoundFrame(ctx, radius);
+  drawCenterCircle(ctx);
   drawHoursHand(ctx, radius);
   drawMinutesHand(ctx, radius);
   drawSecondsHand(ctx, radius);
 }
 
+function drawRoundFrame(ctx, radius) {
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "black";
+  ctx.stroke();
+}
+
+function drawCenterCircle(ctx) {
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI);
+  ctx.fillStyle = "black";
+  ctx.fill();
+}
+
 function drawHoursHand(ctx, radius) {
   const now = new Date();
-  let hour = now.getHours() % 12;
-  hour = hour === 0 ? 12 : hour; 
-  const hourAngle = ((hour + now.getMinutes() / 60) * Math.PI / 6);
-
-  const numRepeats = 3; 
-  const innerDistance = radius * 0.2; 
-  const outerDistance = radius * 0.6; 
+  let hour = now.getHours();
+  const hourAngle = ((hour % 12 + now.getMinutes() / 60) * Math.PI / 6);
+  const numRepeats = 3;
+  const innerDistance = radius * 0.2;
+  const outerDistance = radius * 0.6;
 
   for (let i = 0; i < numRepeats; i++) {
-    const progress = i / (numRepeats - 1); 
+    const progress = i / (numRepeats - 1);
     const distance = innerDistance + progress * (outerDistance - innerDistance);
 
     ctx.save();
-    ctx.rotate(hourAngle); 
+    ctx.rotate(hourAngle);
     ctx.translate(0, -distance);
-    ctx.rotate(-hourAngle); 
+    ctx.rotate(-hourAngle);
     ctx.fillText(hour, 0, 0);
     ctx.restore();
   }
@@ -48,20 +63,19 @@ function drawMinutesHand(ctx, radius) {
   const now = new Date();
   const minute = now.getMinutes() + now.getSeconds() / 60;
   const minuteAngle = (minute * Math.PI / 30);
-
-  const numRepeats = 4; 
-  const innerDistance = radius * 0.2; 
-  const outerDistance = radius * 0.75; 
-  const minuteValue = Math.floor(minute); 
+  const numRepeats = 4;
+  const innerDistance = radius * 0.2;
+  const outerDistance = radius * 0.75;
+  const minuteValue = Math.floor(minute);
 
   for (let i = 0; i < numRepeats; i++) {
-    const progress = i / (numRepeats - 1); 
+    const progress = i / (numRepeats - 1);
     const distance = innerDistance + progress * (outerDistance - innerDistance);
 
     ctx.save();
-    ctx.rotate(minuteAngle); 
+    ctx.rotate(minuteAngle);
     ctx.translate(0, -distance);
-    ctx.rotate(-minuteAngle); 
+    ctx.rotate(-minuteAngle);
     ctx.fillText(minuteValue, 0, 0);
     ctx.restore();
   }
@@ -71,20 +85,19 @@ function drawSecondsHand(ctx, radius) {
   const now = new Date();
   const second = now.getSeconds() + now.getMilliseconds() / 1000;
   const secondAngle = (second * Math.PI / 30);
-
-  const numRepeats = 5; 
-  const innerDistance = radius * 0.2; 
-  const outerDistance = radius * 0.9; 
-  const secondValue = Math.floor(second); 
+  const numRepeats = 5;
+  const innerDistance = radius * 0.2;
+  const outerDistance = radius * 0.9;
+  const secondValue = Math.floor(second);
 
   for (let i = 0; i < numRepeats; i++) {
-    const progress = i / (numRepeats - 1); 
+    const progress = i / (numRepeats - 1);
     const distance = innerDistance + progress * (outerDistance - innerDistance);
 
     ctx.save();
-    ctx.rotate(secondAngle); 
+    ctx.rotate(secondAngle);
     ctx.translate(0, -distance);
-    ctx.rotate(-secondAngle); 
+    ctx.rotate(-secondAngle);
     ctx.fillText(secondValue, 0, 0);
     ctx.restore();
   }
